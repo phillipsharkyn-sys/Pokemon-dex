@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Poké-Checker Clean</title>
+    <title>Poké dex</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #2c3e50; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
@@ -34,7 +34,7 @@
 </head>
 <body>
 
-    <h1>Poké-Checker</h1>
+    <h1>Poké dex</h1>
 
     <div class="section-box">
         <input type="text" id="pokemonName" placeholder="Search name...">
@@ -56,7 +56,7 @@
 
     <div id="chat-container">
         <div id="chat-window">
-            <div class="msg bot">Welcome to the Chat Center. Name a Pokémon and I'll pull the stats!</div>
+            <div class="msg bot">Welcome to the Poké dex Chat Center. Type a name below!</div>
         </div>
         <div style="padding: 10px; background: white; display: flex; gap: 5px;">
             <input type="text" id="chatInput" placeholder="Chat with Bot..." style="flex: 1;">
@@ -82,11 +82,9 @@
                 document.getElementById('name').innerText = data.name;
                 isShiny = false;
 
-                // Types
                 const tCon = document.getElementById('types-container');
                 tCon.innerHTML = data.types.map(t => `<span class="type-badge ${t.type.name}">${t.type.name}</span>`).join('');
 
-                // Weaknesses (Fetch from Type URL)
                 const wCon = document.getElementById('weakness-container');
                 wCon.innerHTML = "...";
                 let weaks = [];
@@ -113,14 +111,14 @@
 
             addBubble(msg, 'user');
             input.value = "";
-            const botId = addBubble("Thinking...", 'bot');
+            const botId = addBubble("Scanning...", 'bot');
 
             try {
                 const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${msg.toLowerCase()}`);
                 const data = await res.json();
-                updateBubble(botId, `Found it! <strong>${data.name}</strong> is a ${data.types[0].type.name} type.`);
+                updateBubble(botId, `Entry found: <strong>${data.name}</strong> is a ${data.types[0].type.name} type.`);
             } catch {
-                updateBubble(botId, "Sorry, I don't recognize that name.");
+                updateBubble(botId, "No data found for that name.");
             }
         }
 
@@ -138,7 +136,6 @@
             document.getElementById(id).innerHTML = text;
         }
 
-        // Enter key listeners
         document.getElementById('pokemonName').addEventListener('keypress', (e) => { if(e.key === 'Enter') searchPokemon(); });
         document.getElementById('chatInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatMessage(); });
     </script>
